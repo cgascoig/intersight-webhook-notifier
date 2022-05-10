@@ -30,16 +30,23 @@ all: build/intersight-webex
 containers: tmp/.intersight-webex-docker-image.sentinel
 .PHONY: containers
 
+build/container/distroless-base:
+> mkdir -p $(@D)
+> skopeo $(SKOPEO_FLAGS) copy docker://gcr.io/distroless/base:latest oci:$@:latest
+
+containers-push: tmp/.intersight-webex-docker-image-push.sentinel
+.PHONY: containers-push
+
 #####
 ISWEBEX_FILES := $(shell find cmd pkg -name \*.go -type f)
 
-build/intersight-webex: $(GLOBAL_FILES) $(WEBEX_BOT_FILES)
+build/intersight-webex: $(GLOBAL_FILES) $(ISWEBEX_FILES)
 > mkdir -p $(@D)
-> $(GO_BUILD_CMD) -o "$@" $(GO_BUILD_FLAGS) $(GO_MODULE_BASE)/cmd/webex_bot
+> $(GO_BUILD_CMD) -o "$@" $(GO_BUILD_FLAGS) $(GO_MODULE_BASE)/cmd/intersight-webex
 
-build/intersight-webex-linux_amd64: $(GLOBAL_FILES) $(WEBEX_BOT_FILES)
+build/intersight-webex-linux_amd64: $(GLOBAL_FILES) $(ISWEBEX_FILES)
 > mkdir -p $(@D)
-> GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o "$@" $(GO_BUILD_FLAGS) $(GO_MODULE_BASE)/cmd/webex_bot
+> GOOS=linux GOARCH=amd64 $(GO_BUILD_CMD) -o "$@" $(GO_BUILD_FLAGS) $(GO_MODULE_BASE)/cmd/intersight-webex
 
 tmp/.intersight-webex-docker-image.sentinel: build/intersight-webex-linux_amd64 Makefile build/container/distroless-base
 > mkdir -p $(@D)
@@ -48,4 +55,11 @@ tmp/.intersight-webex-docker-image.sentinel: build/intersight-webex-linux_amd64 
 > umoci insert --image build/container/intersight-webex:latest build/intersight-webex-linux_amd64 /intersight-webex
 > umoci config --image build/container/intersight-webex:latest --config.cmd /intersight-webex
 # > docker build . -f Dockerfile.webex_bot -t "$(DOCKER_IMAGE_ID_BASE)/webex_bot:latest"
+> touch $@
+
+tmp/.intersight-webex-docker-image-push.sentinel: tmp/.intersight-webex-docker-image.sentinel
+> # always push as :latest
+# > docker push "$(DOCKER_IMAGE_ID_BASE)/webex_bot:latest"
+> skopeo $(SKOPEO_FLAGS) copy -f v2s2 oci:build/container/intersight-webex:latest "docker://$(DOCKER_IMAGE_ID_BASE)/intersight-webex:latest"
+> gcloud run services update intersight-webex --region us-central1 --image "$(DOCKER_IMAGE_ID_BASE)/intersight-webex:latest"
 > touch $@
