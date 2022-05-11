@@ -27,6 +27,10 @@ GLOBAL_FILES := go.mod Makefile
 all: build/intersight-webex
 .PHONY: all
 
+test:$(GLOBAL_FILES) $(ISWEBEX_FILES)
+> $(GO_CMD) test ./cmd/* ./pkg/*
+.PHONY: test
+
 containers: tmp/.intersight-webex-docker-image.sentinel
 .PHONY: containers
 

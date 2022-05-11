@@ -60,7 +60,6 @@ func (s *Server) IntersightHandler() http.HandlerFunc {
 			logrus.Errorf("Received Intersight request with invalid body: %v", err)
 			return
 		}
-		logrus.WithField("subscription", vars["subscription"]).Debug("IntersightHandler handling request for subscription")
 
 		wh := map[string]interface{}{}
 		err = json.Unmarshal(body, &wh)
@@ -68,6 +67,8 @@ func (s *Server) IntersightHandler() http.HandlerFunc {
 			logrus.Errorf("Received Intersight request with invalid body: %v", err)
 			return
 		}
+
+		logrus.WithField("subscription", vars["subscription"]).WithField("body", wh).Debug("IntersightHandler handling request for subscription")
 
 		msg := webhookToMessage(wh)
 
