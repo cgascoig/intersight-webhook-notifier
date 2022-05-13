@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/cgascoig/intersight-webex/pkg/storage"
 	"github.com/cgascoig/intersight-webex/pkg/webexbotkit"
@@ -82,6 +83,11 @@ func (s *Server) IntersightHandler() http.HandlerFunc {
 
 		logrus.WithField("subscription", vars["subscription"]).WithField("body", wh).Debug("IntersightHandler handling request for subscription")
 
+		if isWorkflowUpdateCleanup(wh, time.Now()) {
+			logrus.WithField("body", wh).Debug("Ingoring workflow update that appears to be cleanup")
+			return
+		}
+
 		msg := webhookToMessage(wh)
 
 		if msg == "" {
@@ -90,6 +96,44 @@ func (s *Server) IntersightHandler() http.HandlerFunc {
 
 		s.bot.SendMessageToRoomID(vars["subscription"], msg)
 	}
+}
+
+func isWorkflowUpdateCleanup(wh map[string]interface{}, tm time.Time) bool {
+	eventObjectType, ok := wh["EventObjectType"]
+	if !ok {
+		logrus.Error("Event has no object type")
+		return false
+	}
+
+	operation, ok := wh["Operation"]
+	if !ok {
+		logrus.Error("Webhook missing operation")
+		return false
+	}
+
+	switch eventObjectType {
+	case "workflow.WorkflowInfo":
+		switch operation {
+		case "Modified":
+			if eventIntf, ok := wh["Event"]; ok {
+				if event, ok := eventIntf.(map[string]interface{}); ok {
+					if cleanupIntf, ok := event["CleanupTime"]; ok {
+						if cleanup, ok := cleanupIntf.(string); ok {
+							cleanupTime, err := time.Parse("2006-01-02T15:04:05.000Z", cleanup)
+							if err != nil {
+								return false
+							}
+
+							if tm.After(cleanupTime.Add(time.Minute * -10)) {
+								return true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return false
 }
 
 func (s *Server) Run() error {
