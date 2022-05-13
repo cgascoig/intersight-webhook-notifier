@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/cgascoig/intersight-webex/pkg/storage"
 	"github.com/cgascoig/intersight-webex/pkg/webexbotkit"
@@ -41,15 +40,28 @@ func NewServer() *Server {
 
 func (s *Server) messageHandler() webexbotkit.MessageHandler {
 	return func(msg webexbotkit.Message) {
-		tokens := strings.Split(msg.Message, " ")
-		if len(tokens) == 1 && tokens[0] == "setup" {
-			s.setupMessage(msg.RoomID)
-		}
+		// tokens := strings.Split(msg.Message, " ")
+		// if len(tokens) == 1 && tokens[0] == "setup" {
+		// 	s.setupMessage(msg.RoomID)
+		// }
+
+		// Always just resond with the setup message
+		s.setupMessage(msg.RoomID)
 	}
 }
 
+const setupMessage = `Hi, I'm the Intersight Notification Bot. 
+
+To get setup, in Intersight:
+
+* Go to Settings -> Webhooks -> Add Webhook. 
+	* Use %s/is/%s as the Payload URL
+	* Enter any string in the Secret field (it is not yet used)
+	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm and workflow.WorkflowInfo object types for the event subscriptions. 
+`
+
 func (s *Server) setupMessage(roomID string) {
-	s.bot.SendMessageToRoomID(roomID, fmt.Sprintf("In Intersight, go to Settings -> Webhooks -> Add Webhook and use '%s/is/%s' as the Payload URL", s.serviceURL, roomID))
+	s.bot.SendMessageToRoomID(roomID, fmt.Sprintf(setupMessage, s.serviceURL, roomID))
 }
 
 func (s *Server) IntersightHandler() http.HandlerFunc {
