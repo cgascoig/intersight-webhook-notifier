@@ -303,7 +303,7 @@ func TestWebhookToMessage(t *testing.T) {
 			out: `
 ## Intersight tam.AdvisoryInfo Modified
 
-An Intersight event was received with an event type that I don't support yet, but here is the raw event:
+An Intersight event was received with an event type that I don't support yet, but here is the modified object:
 
 ` + "```" + `
 {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"text/template"
 
 	"github.com/sirupsen/logrus"
@@ -17,9 +18,15 @@ func webhookToMessage(wh map[string]interface{}) string {
 		logrus.Error("Event has no object type")
 		return ""
 	}
-
-	operation, ok := wh["Operation"]
-	if !ok {
+	var operation string
+	if op, ok := wh["Operation"]; ok {
+		if op, ok := op.(string); ok {
+			operation = op
+		} else {
+			logrus.Error("Webhook missing operation")
+			return ""
+		}
+	} else {
 		logrus.Error("Webhook missing operation")
 		return ""
 	}
@@ -78,10 +85,10 @@ func webhookToMessage(wh map[string]interface{}) string {
 		msgFormat := `
 ## Intersight %s %s
 
-An Intersight event was received with an event type that I don't support yet, but here is the raw event:
+An Intersight event was received with an event type that I don't support yet, but here is the %s object:
 
 ` + "```\n%s\n```"
-		msg := fmt.Sprintf(msgFormat, eventObjectType, operation, eventJSON)
+		msg := fmt.Sprintf(msgFormat, eventObjectType, operation, strings.ToLower(operation), eventJSON)
 		return msg
 	}
 
