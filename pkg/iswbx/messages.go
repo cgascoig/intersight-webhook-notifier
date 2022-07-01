@@ -2,6 +2,8 @@ package iswbx
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"text/template"
 
 	"github.com/sirupsen/logrus"
@@ -45,9 +47,42 @@ func webhookToMessage(wh map[string]interface{}) string {
 			logrus.Errorf("Unsupported event operation: %v", operation)
 			return ""
 		}
+	case "":
+		logrus.Info("Received Intersight PING Webhook")
+		if subscription, ok := wh["Subscription"]; ok {
+			if subscription, ok := subscription.(map[string]interface{}); ok {
+				if m, ok := subscription["Moid"]; ok {
+					if m, ok := m.(string); ok {
+						return fmt.Sprintf("Intersight webhooks are now being received for subscription [%s](https://www.intersight.com/an/settings/webhooks/%s/edit/)", m, m)
+					}
+				}
+			}
+		}
+
+		return "Intersight webhooks are now being received"
 	default:
-		logrus.WithField("wh", wh).Errorf("Unsupported event object type: %v", eventObjectType)
-		return ""
+		logrus.WithField("wh", wh).Warnf("Unsupported event object type: %v", eventObjectType)
+
+		event, ok := wh["Event"]
+		if !ok {
+			logrus.Errorf("Unsupported event object type and with no Event")
+			return ""
+		}
+
+		eventJSON, err := json.MarshalIndent(event, "", "  ")
+		if err != nil {
+			logrus.Errorf("Error marshalling JSON for generic/unsupported event")
+			return ""
+		}
+
+		msgFormat := `
+## Intersight %s %s
+
+An Intersight event was received with an event type that I don't support yet, but here is the raw event:
+
+` + "```\n%s\n```"
+		msg := fmt.Sprintf(msgFormat, eventObjectType, operation, eventJSON)
+		return msg
 	}
 
 	buf := new(bytes.Buffer)

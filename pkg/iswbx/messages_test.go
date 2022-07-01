@@ -279,6 +279,67 @@ func TestWebhookToMessage(t *testing.T) {
 
 **Start Time:** 2022-05-10T00:07:15.844Z`,
 		},
+		{
+			msg: "unsupported event object types should send a generic message with raw event",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "tam.AdvisoryInfo",
+				"Operation":       "Modified",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       true,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "TERMINATED",
+				},
+			},
+			out: `
+## Intersight tam.AdvisoryInfo Modified
+
+An Intersight event was received with an event type that I don't support yet, but here is the raw event:
+
+` + "```" + `
+{
+  "ClassId": "workflow.WorkflowInfo",
+  "Email": "email@cisco.com",
+  "EndTime": "2022-05-10T00:09:39.362Z",
+  "Internal": true,
+  "Moid": "6279acb3696f6e2d31c5fcdd",
+  "Name": "RemoveKubernetesClusterProfileResources",
+  "ObjectType": "workflow.WorkflowInfo",
+  "Parent": null,
+  "ParentTaskInfo": null,
+  "StartTime": "2022-05-10T00:07:15.844Z",
+  "Status": "TERMINATED"
+}
+` + "```",
+		},
+		{
+			msg: "PING events should send an informational message",
+			in: map[string]interface{}{
+				"Subscription": map[string]interface{}{
+					"link":       "https://www.intersight.com/api/v1/notification/AccountSubscriptions/6279fd257375732d3044a48b",
+					"ClassId":    "mo.MoRef",
+					"Moid":       "6279fd257375732d3044a48b",
+					"ObjectType": "notification.AccountSubscription",
+				},
+				"ObjectType":      "mo.WebhookResult",
+				"Event":           nil,
+				"AccountMoid":     "59c84e4a16267c0001c23428",
+				"DomainGroupMoid": "5b25418d7a7662743465cf72",
+				"ClassId":         "mo.WebhookResult",
+				"EventObjectType": "",
+				"Operation":       "None",
+			},
+			out: "Intersight webhooks are now being received for subscription [6279fd257375732d3044a48b](https://www.intersight.com/an/settings/webhooks/6279fd257375732d3044a48b/edit/)",
+		},
 	}
 
 	for _, test := range tests {
