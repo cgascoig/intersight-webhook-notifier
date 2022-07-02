@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"time"
 
 	"github.com/cgascoig/intersight-webhook-notifier/pkg/storage"
@@ -61,10 +62,12 @@ To get setup, in Intersight:
 	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm and workflow.WorkflowInfo object types for the event subscriptions - other event types will be forward to WebEx in raw form. 
 
 Disclaimer: This bot is an example of how Intersight Webhooks can be used to enable notifications of Intersight events. You are free to use it but you acknowledge that the bot is not supported by Cisco TAC, has no SLA and may stop working at any time.
+
+Bot build details: %s
 `
 
 func (s *Server) setupMessage(roomID string) {
-	s.bot.SendMessageToRoomID(roomID, fmt.Sprintf(setupMessage, s.serviceURL, roomID))
+	s.bot.SendMessageToRoomID(roomID, fmt.Sprintf(setupMessage, s.serviceURL, roomID, getVersionString()))
 }
 
 func (s *Server) IntersightHandler() http.HandlerFunc {
@@ -139,6 +142,8 @@ func isWorkflowUpdateCleanup(wh map[string]interface{}, tm time.Time) bool {
 }
 
 func (s *Server) Run() error {
+	logrus.Infof("intersight-webhook-notifier starting, version: %s", getVersionString())
+
 	// Determine port for HTTP service.
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -176,4 +181,44 @@ func (s *Server) Run() error {
 	r.HandleFunc("/webex", s.bot.HttpHandler())
 
 	return http.ListenAndServe(fmt.Sprintf(":%s", port), r)
+}
+
+func getVersionString() string {
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "<error getting build info>"
+	}
+
+	var vcsCommit string
+	var vcsDirty bool
+	var foundVcsCommit, foundVcsDirty bool
+	for _, setting := range bi.Settings {
+		if setting.Key == "vcs.revision" {
+			vcsCommit = setting.Value
+			foundVcsCommit = true
+		}
+		if setting.Key == "vcs.modified" {
+			switch setting.Value {
+			case "true":
+				vcsDirty = true
+				foundVcsDirty = true
+			case "false":
+				vcsDirty = false
+				foundVcsDirty = true
+			default:
+				foundVcsDirty = false
+			}
+		}
+	}
+
+	if foundVcsCommit == false || foundVcsDirty == false {
+		return "<build info not found>"
+	}
+
+	var dirtyStr string
+	if vcsDirty {
+		dirtyStr = "(dirty)"
+	}
+
+	return fmt.Sprintf("Commit: %s%s", vcsCommit, dirtyStr)
 }
