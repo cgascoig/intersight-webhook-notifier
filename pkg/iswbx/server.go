@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/cgascoig/intersight-webex/pkg/storage"
-	"github.com/cgascoig/intersight-webex/pkg/webexbotkit"
+	"github.com/cgascoig/intersight-webhook-notifier/pkg/storage"
+	"github.com/cgascoig/intersight-webhook-notifier/pkg/webexbotkit"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/api/run/v1"

@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/cgascoig/intersight-webex/pkg/iswbx"
+	"github.com/cgascoig/intersight-webhook-notifier/pkg/iswbx"
 	"github.com/sirupsen/logrus"
 )
 
