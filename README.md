@@ -2,7 +2,7 @@
 
 # Intersight Webhook Notifier
 
-This is a WebEx bot that receives webhook events from Intersight and relays them to WebEx spaces. The hosted bot is free to use subject to the disclaimer below and the code is hosted here if you would like to host an instance yourself.
+This is a WebEx bot that receives [Intersight Webhook](https://intersight.com/help/saas/features/cisco_intersight/settings#configuring_webhooks) events and relays them to WebEx spaces. The hosted bot is free to use subject to the disclaimer below and the code is hosted here if you would like to host an instance yourself.
 
 **Disclaimer:** This bot is an example of how Intersight Webhooks can be used to enable notifications of Intersight events. You are free to use it but you acknowledge that the bot is not supported by Cisco TAC, has no SLA and may stop working at any time. See [LICENSE](LICENSE) for more details. 
 
