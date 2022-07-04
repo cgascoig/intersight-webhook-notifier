@@ -1,4 +1,4 @@
-[![CI](https://github.com/cgascoig/intersight-webhook-notifier/actions/workflows/ci.yml/badge.svg)](https://github.com/cgascoig/intersight-webhook-notifier/actions/workflows/ci.yml)
+[![Tests](https://github.com/cgascoig/intersight-webhook-notifier/actions/workflows/ci.yml/badge.svg)](https://github.com/cgascoig/intersight-webhook-notifier/actions/workflows/ci.yml)
 
 # Intersight Webhook Notifier
 
@@ -8,14 +8,14 @@ This is a WebEx bot that receives webhook events from Intersight and relays them
 
 ## Using the hosted bot
 
-1. Create a new space and add the bot (Intersight Notification Bot <intersight-notifier-prd@webex.bot>) as well as anyone else who wants to receive notifications:
+1. Create a new space and add the bot (`Intersight Notification Bot <intersight-notifier-prd@webex.bot>`) as well as anyone else who wants to receive notifications:
 ![Create new space and add the bot](docs/create-space-bot.png)
 2. Send a message @mentioning the bot, it will then respond back with instructions on how to configure the Intersight Webhooks:
 ![Send the bot a message for instructions](docs/bot-message.png)
 3. Follow the bot's instructions - in Intersight, go to Settings -> Webhooks -> Add Webhook. 
 	* Enter the Payload URL as specified by the bot
 	* Enter any string in the Secret field (it is not used at this time)
-	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm and workflow.WorkflowInfo object types for the event subscriptions - other event types will be forward to WebEx in raw form. 
+	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm and workflow.WorkflowInfo object types for the event subscriptions - other event types will be forwarded to WebEx in raw form. 
 ![Setup Intersight Webhook as per bot's instructions](docs/setup-intersight-webhook.png)
 
 ## Deploying your own instance of the bot
