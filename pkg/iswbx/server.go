@@ -59,7 +59,7 @@ To get setup, in Intersight:
 * Go to Settings -> Webhooks -> Add Webhook. 
 	* Use %s/is/%s as the Payload URL
 	* Enter any string in the Secret field (it is not used at this time)
-	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm and workflow.WorkflowInfo object types for the event subscriptions - other event types will be forward to WebEx in raw form. 
+	* Add the Event subscriptions that you are interested in. Currently this bot supports cond.Alarm object types for the event subscriptions - other event types will still be forward to WebEx but in raw form. 
 
 Disclaimer: This bot is an example of how Intersight Webhooks can be used to enable notifications of Intersight events. You are free to use it but you acknowledge that the bot is not supported by Cisco TAC, has no SLA and may stop working at any time.
 
