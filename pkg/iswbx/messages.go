@@ -43,16 +43,17 @@ func webhookToMessage(wh map[string]interface{}) string {
 			logrus.Errorf("Unsupported event operation: %v", operation)
 			return ""
 		}
-	// case "workflow.WorkflowInfo":
-	// 	switch operation {
-	// 	case "Modified":
-	// 		tmpl = workflowModifiedTmpl
-	// 	case "Created":
-	// 		tmpl = workflowCreatedTmpl
-	// 	default:
-	// 		logrus.Errorf("Unsupported event operation: %v", operation)
-	// 		return ""
-	// 	}
+
+	case "workflow.WorkflowInfo":
+		switch operation {
+		case "Modified":
+			tmpl = workflowModifiedTmpl
+		case "Created":
+			tmpl = workflowCreatedTmpl
+		default:
+			logrus.Errorf("Unsupported event operation: %v", operation)
+			return ""
+		}
 	case "":
 		logrus.Info("Received Intersight PING Webhook")
 		if subscription, ok := wh["Subscription"]; ok {

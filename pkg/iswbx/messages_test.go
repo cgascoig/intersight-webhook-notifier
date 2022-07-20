@@ -105,180 +105,180 @@ func TestWebhookToMessage(t *testing.T) {
 **Last Transition Time:** 2022-05-09T05:55:17.53Z`,
 		},
 
-		// 		{
-		// 			msg: "normal workflow created message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Created",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       false,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "RUNNING",
-		// 				},
-		// 			},
-		// 			out: `
-		// ## Intersight Workflow Started
+		{
+			msg: "normal workflow created message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Created",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       false,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "RUNNING",
+				},
+			},
+			out: `
+## Intersight Workflow Started
 
-		// **Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
+**Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
 
-		// **Email:** email@cisco.com
+**Email:** email@cisco.com
 
-		// **Status:** RUNNING
+**Status:** RUNNING
 
-		// **Start Time:** 2022-05-10T00:07:15.844Z`,
-		// 		},
-		// 		{
-		// 			msg: "internal workflows should generate empty message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Created",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       true,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "RUNNING",
-		// 				},
-		// 			},
-		// 			out: ``,
-		// 		},
-		// 		{
-		// 			msg: "updates to running workflows generate no message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Modified",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       false,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "RUNNING",
-		// 				},
-		// 			},
-		// 			out: ``,
-		// 		},
-		// 		{
-		// 			msg: "normal workflow update message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Modified",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       false,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "BLAH",
-		// 				},
-		// 			},
-		// 			out: `
-		// ## Intersight Workflow Updated
+**Start Time:** 2022-05-10T00:07:15.844Z`,
+		},
+		{
+			msg: "internal workflows should generate empty message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Created",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       true,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "RUNNING",
+				},
+			},
+			out: ``,
+		},
+		{
+			msg: "updates to running workflows generate no message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Modified",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       false,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "RUNNING",
+				},
+			},
+			out: ``,
+		},
+		{
+			msg: "normal workflow update message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Modified",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       false,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "BLAH",
+				},
+			},
+			out: `
+## Intersight Workflow Updated
 
-		// **Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
+**Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
 
-		// **Email:** email@cisco.com
+**Email:** email@cisco.com
 
-		// **Status:** BLAH
+**Status:** BLAH
 
-		// **Start Time:** 2022-05-10T00:07:15.844Z`,
-		// 		},
-		// 		{
-		// 			msg: "finished workflow update message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Modified",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       false,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "COMPLETED",
-		// 				},
-		// 			},
-		// 			out: `
-		// ## Intersight Workflow Completed
+**Start Time:** 2022-05-10T00:07:15.844Z`,
+		},
+		{
+			msg: "finished workflow update message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Modified",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       false,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "COMPLETED",
+				},
+			},
+			out: `
+## Intersight Workflow Completed
 
-		// **Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
+**Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
 
-		// **Email:** email@cisco.com
+**Email:** email@cisco.com
 
-		// **Status:** COMPLETED
+**Status:** COMPLETED
 
-		// **Start Time:** 2022-05-10T00:07:15.844Z`,
-		// 		},
-		// 		{
-		// 			msg: "internal workflows that end in error should display message",
-		// 			in: map[string]interface{}{
-		// 				"ClassId":         "mo.WebhookResult",
-		// 				"ObjectType":      "mo.WebhookResult",
-		// 				"EventObjectType": "workflow.WorkflowInfo",
-		// 				"Operation":       "Modified",
-		// 				"Event": map[string]interface{}{
-		// 					"ClassId":        "workflow.WorkflowInfo",
-		// 					"Email":          "email@cisco.com",
-		// 					"EndTime":        "2022-05-10T00:09:39.362Z",
-		// 					"StartTime":      "2022-05-10T00:07:15.844Z",
-		// 					"Internal":       true,
-		// 					"Moid":           "6279acb3696f6e2d31c5fcdd",
-		// 					"Name":           "RemoveKubernetesClusterProfileResources",
-		// 					"ObjectType":     "workflow.WorkflowInfo",
-		// 					"Parent":         nil,
-		// 					"ParentTaskInfo": nil,
-		// 					"Status":         "TERMINATED",
-		// 				},
-		// 			},
-		// 			out: `
-		// ## Intersight Workflow Terminated
+**Start Time:** 2022-05-10T00:07:15.844Z`,
+		},
+		{
+			msg: "internal workflows that end in error should display message",
+			in: map[string]interface{}{
+				"ClassId":         "mo.WebhookResult",
+				"ObjectType":      "mo.WebhookResult",
+				"EventObjectType": "workflow.WorkflowInfo",
+				"Operation":       "Modified",
+				"Event": map[string]interface{}{
+					"ClassId":        "workflow.WorkflowInfo",
+					"Email":          "email@cisco.com",
+					"EndTime":        "2022-05-10T00:09:39.362Z",
+					"StartTime":      "2022-05-10T00:07:15.844Z",
+					"Internal":       true,
+					"Moid":           "6279acb3696f6e2d31c5fcdd",
+					"Name":           "RemoveKubernetesClusterProfileResources",
+					"ObjectType":     "workflow.WorkflowInfo",
+					"Parent":         nil,
+					"ParentTaskInfo": nil,
+					"Status":         "TERMINATED",
+				},
+			},
+			out: `
+## Intersight Workflow Terminated
 
-		// **Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
+**Name:** [RemoveKubernetesClusterProfileResources](https://www.intersight.com/an/workflow/workflow-infos/6279acb3696f6e2d31c5fcdd)
 
-		// **Email:** email@cisco.com
+**Email:** email@cisco.com
 
-		// **Status:** TERMINATED
+**Status:** TERMINATED
 
-		// **Start Time:** 2022-05-10T00:07:15.844Z`,
-		// 		},
+**Start Time:** 2022-05-10T00:07:15.844Z`,
+		},
 		{
 			msg: "unsupported event object types should send a generic message with raw event",
 			in: map[string]interface{}{
