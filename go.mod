@@ -1,6 +1,6 @@
 module github.com/cgascoig/intersight-webhook-notifier
 
-go 1.18
+go 1.20
 
 require (
 	cloud.google.com/go/firestore v1.9.0
