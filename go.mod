@@ -8,7 +8,7 @@ require (
 	github.com/jbogarin/go-cisco-webex-teams v0.4.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
-	google.golang.org/api v0.168.0
+	google.golang.org/api v0.169.0
 )
 
 require (
