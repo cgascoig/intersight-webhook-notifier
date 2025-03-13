@@ -1,6 +1,7 @@
 module github.com/cgascoig/intersight-webhook-notifier
 
-go 1.22
+go 1.23.0
+
 toolchain go1.23.5
 
 require (
