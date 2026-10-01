@@ -1,9 +1,9 @@
 module github.com/cgascoig/intersight-webhook-notifier
 
-go 1.25.8
+go 1.26.0
 
 require (
-	cloud.google.com/go/firestore v1.25.0
+	cloud.google.com/go/firestore v1.26.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jbogarin/go-cisco-webex-teams v0.4.3
 	github.com/sirupsen/logrus v1.10.2
